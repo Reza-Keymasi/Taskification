@@ -6,6 +6,8 @@ import {
 } from "react";
 import { Loader2 } from "lucide-react";
 
+import { combineClasses } from "../../utils/combineClasses.utils";
+
 type Sizes = "xs" | "sm" | "md" | "lg" | "xl";
 type Variants =
   | "primary"
@@ -67,10 +69,6 @@ const buttonVariants: ButtonVariants = {
     default: "rounded-md",
     circle: "rounded-full aspect-square",
   },
-};
-
-const combineClasses = (...classes: (string | undefined | false)[]): string => {
-  return classes.filter(Boolean).join(" ");
 };
 
 export default function Button({
