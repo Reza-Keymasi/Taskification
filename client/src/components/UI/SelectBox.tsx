@@ -12,23 +12,31 @@ type SelectBoxOptionType = {
 type SelectBoxProps = {
   clearable?: boolean;
   initialValue?: string;
+  inputClassName?: string;
   isDisabled?: boolean;
   label: string;
+  labelClassName?: string;
+  leftIconClassName?: string;
   name: string;
   onChange?: (value: string) => void;
   onOptionSelect: (option: string) => void;
   options: SelectBoxOptionType[];
+  rightIconClassName?: string;
   searchedQuery?: string;
   selectedOption?: string;
 };
 
 export default function SelectBox({
   clearable = false,
+  inputClassName,
   isDisabled,
   label,
+  labelClassName,
+  leftIconClassName,
   name,
   onOptionSelect,
   options,
+  rightIconClassName,
   selectedOption,
 }: SelectBoxProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -109,16 +117,18 @@ export default function SelectBox({
             />
           )
         }
+        inputClassName={`${inputClassName} cursor-pointer`}
         isDisabled={isDisabled}
         label={label}
-        inputClassName="cursor-pointer"
+        labelClassName={labelClassName}
+        leftIconClassName={leftIconClassName}
         name={name}
         onMouseDown={handleToggleDropDown}
         onClickRightIcon={(e?: MouseEvent<HTMLDivElement>) =>
           handleClickRightIcon(e)
         }
         rightIcon={<ChevronDown />}
-        rightIconClassName="peer-focus:rotate-180 transition-all duration-300"
+        rightIconClassName={`${rightIconClassName} peer-focus:rotate-180 transition-all duration-300`}
         ref={inputRef}
         readOnly
         value={selectBoxValue}
