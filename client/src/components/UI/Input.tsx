@@ -2,29 +2,35 @@ import {
   type ChangeEvent,
   type ComponentProps,
   type FocusEvent,
+  type MouseEvent,
   type ReactNode,
   type Ref,
 } from "react";
 import { combineClasses } from "../../utils/combineClasses.utils";
 
 type InputProps = {
+  clearable?: boolean;
+  clearIcon?: ReactNode;
   error?: string | null;
   fullWidth?: boolean;
-  isDisabled?: boolean;
   inputClassName?: string;
+  isDisabled?: boolean;
+  label: string;
   labelClassName?: string;
-  ref?: Ref<HTMLInputElement>;
-  rightIconClassName?: string;
+  leftIcon?: ReactNode;
   leftIconClassName?: string;
   name?: string;
-  label: string;
-  leftIcon?: ReactNode;
-  rightIcon?: ReactNode;
   onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onClickRightIcon?: (e?: MouseEvent<HTMLDivElement>) => void;
+  ref?: Ref<HTMLInputElement>;
+  rightIcon?: ReactNode;
+  rightIconClassName?: string;
 } & ComponentProps<"input">;
 
 export default function Input({
+  clearable = false,
+  clearIcon,
   error,
   fullWidth = false,
   inputClassName = "",
@@ -36,6 +42,7 @@ export default function Input({
   name,
   onBlur,
   onChange,
+  onClickRightIcon,
   ref,
   rightIcon,
   rightIconClassName = "",
@@ -64,7 +71,9 @@ export default function Input({
   const leftIconBaseClasess =
     "absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-800 pointer-events-none";
   const rightIconBaseClasess =
-    "absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-800 pointer-events-none";
+    "absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-800";
+  const clearIconBaseClasess =
+    "absolute right-9 top-1/2 transform -translate-y-1/2 text-gray-800";
 
   const inputClasses = combineClasses(
     inputBaseClasses,
@@ -72,7 +81,7 @@ export default function Input({
     inputClassName,
     stateClasses,
     leftIcon ? "pl-10" : "pl-3",
-    rightIcon ? "pr-10" : "pr-3",
+    (rightIcon && !clearable && "pr-10") || clearable ? "pr-14" : "pr-3",
     fullWidth ? "w-full" : ""
   );
 
@@ -81,7 +90,7 @@ export default function Input({
     labelStateClasses,
     labelClassName,
     leftIcon ? "pl-10" : "pl-3",
-    rightIcon ? "pr-10" : "pr-3"
+    rightIcon ? "pr-10" : clearable ? "pr-13" : "pr-3"
   );
 
   const containerClasess = combineClasses(
@@ -93,9 +102,16 @@ export default function Input({
     leftIconBaseClasess,
     leftIconClassName
   );
+
   const rightIconClasses = combineClasses(
     rightIconBaseClasess,
-    rightIconClassName
+    rightIconClassName,
+    !isDisabled ? "cursor-pointer" : "cursor-not-allowed"
+  );
+
+  const clearIconClasess = combineClasses(
+    clearIconBaseClasess,
+    !isDisabled ? "cursor-pointer" : "cursor-not-allowed"
   );
 
   return (
@@ -115,7 +131,13 @@ export default function Input({
           {...props}
         />
 
-        {rightIcon && <div className={`${rightIconClasses}`}>{rightIcon}</div>}
+        {rightIcon && (
+          <div className={`${rightIconClasses}`} onMouseDown={onClickRightIcon}>
+            {rightIcon}
+          </div>
+        )}
+
+        {clearIcon && <div className={`${clearIconClasess}`}>{clearIcon}</div>}
 
         <label className={`${labelClasess}`} htmlFor={label}>
           {modifiedLabel}
