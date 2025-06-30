@@ -60,6 +60,26 @@ export default function DatePicker({
     return days;
   }
 
+  function handlePrevMonth() {
+    if (monthStore === 0) {
+      setMonthStore(11);
+      setYearStore(yearStore - 1);
+    } else {
+      setMonthStore(monthStore - 1);
+    }
+  }
+
+  function handleNextMonth() {
+    if (monthStore === 11) {
+      setMonthStore(0);
+      setYearStore(yearStore + 1);
+    } else {
+      setMonthStore(monthStore + 1);
+    }
+  }
+
+  console.log(monthStore);
+
   const calendarAllDays = calendarDays();
 
   return (
@@ -105,7 +125,7 @@ export default function DatePicker({
             {/* This is date picker header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center justify-center hover:bg-gray-400 w-7 h-7 rounded-full cursor-pointer">
-                <ChevronLeft size={18} />
+                <ChevronLeft size={18} onClick={handlePrevMonth} />
               </div>
 
               <div className="flex gap-1 font-medium justify-center">
@@ -113,7 +133,7 @@ export default function DatePicker({
                 <p>2025</p>
               </div>
               <div className="flex items-center justify-center hover:bg-gray-400 w-7 h-7 rounded-full cursor-pointer">
-                <ChevronRight size={18} />
+                <ChevronRight size={18} onClick={handleNextMonth} />
               </div>
             </div>
 
