@@ -1,5 +1,6 @@
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { X, ChevronLeft, ChevronRight, LucideCalendar } from "lucide-react";
+
 import Input from "./Input";
 
 const months = [
@@ -22,10 +23,13 @@ const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 type DateSteps = "days" | "months" | "years";
 
 type DatePickerProps = {
+  clearable?: boolean;
   containerClassName?: string;
+  inputClassName?: string;
   label: string;
   name: string;
   onSelectDate: (date: Date | null) => void;
+  rightIconClassName?: string;
   value: Date | null;
 };
 
@@ -56,10 +60,13 @@ function isSameDay(dateA: Date | null, dateB: Date | null) {
 }
 
 export default function DatePicker({
-  containerClassNamen,
+  clearable = false,
+  containerClassName = "",
+  inputClassName,
   label,
   name,
   onSelectDate,
+  rightIconClassName = "",
   value,
 }: DatePickerProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -68,10 +75,26 @@ export default function DatePicker({
   const [yearStore, setYearStore] = useState(getYear);
   const [dateStep, setDateStep] = useState<DateSteps>("days");
 
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (isDropDownOpen) {
+      inputRef?.current?.focus();
+    } else {
+      inputRef?.current?.blur();
+    }
+  }, [isDropDownOpen]);
+
   function handleToggleDropDown(e: MouseEvent<HTMLDivElement>) {
     e.preventDefault();
     setIsDropDownOpen((prev) => !prev);
     setDateStep("days");
+  }
+
+  function handleClickRightIcon(e?: MouseEvent<HTMLDivElement>) {
+    e?.stopPropagation();
+    e?.preventDefault();
+    setIsDropDownOpen((prev) => !prev);
   }
 
   function calendarDays() {
@@ -111,8 +134,6 @@ export default function DatePicker({
     }
   }
 
-  console.log(monthStore);
-
   const calendarAllDays = calendarDays();
 
   function toggleDateStep(step: DateSteps) {
@@ -134,22 +155,29 @@ export default function DatePicker({
     onSelectDate(date);
   }
 
+  function handleClear() {
+    onSelectDate(null);
+    setMonthStore(getMonth);
+    setYearStore(getYear);
+  }
+
   return (
-    <div className="relative w-[300px]">
+    <div className={`relative w-[300px] ${containerClassName}`}>
       <Input
-        //   clearable={clearable}
-        //   clearIcon={
-        //     selectedOption &&
-        //     clearable && (
-        //         <X
-        //         color="#caced8"
-        //         onMouseDown={handleClear}
-        //         size={15}
-        //         strokeWidth={2}
-        //         />
-        //     )
-        //   }
-        //   inputClassName={`${inputClassName} cursor-pointer`}
+        clearable={clearable}
+        clearIcon={
+          value &&
+          clearable && (
+            <X
+              color="#caced8"
+              onMouseDown={handleClear}
+              size={18}
+              strokeWidth={2}
+            />
+          )
+        }
+        clearIconClassName="right-10"
+        inputClassName={`${inputClassName} cursor-pointer`}
         //   isDisabled={isDisabled}
         // label={label}
         //   labelClassName={labelClassName}
@@ -159,13 +187,13 @@ export default function DatePicker({
         onMouseDown={handleToggleDropDown}
         fullWidth
         onChange={() => {}}
-        //   onClickRightIcon={(e?: MouseEvent<HTMLDivElement>) =>
-        //     handleClickRightIcon(e)
-        //   }
-        //   rightIcon={<ChevronDown />}
-        //   rightIconClassName={`${rightIconClassName} peer-focus:rotate-180 transition-all duration-300`}
-        //   ref={inputRef}
-        //   readOnly
+        onClickRightIcon={(e?: MouseEvent<HTMLDivElement>) =>
+          handleClickRightIcon(e)
+        }
+        rightIcon={<LucideCalendar />}
+        rightIconClassName={`${rightIconClassName}`}
+        ref={inputRef}
+        readOnly
         value={formattedDate(value, "yyyy-mm-dd")}
       />
 
