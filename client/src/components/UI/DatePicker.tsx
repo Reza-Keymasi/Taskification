@@ -23,9 +23,10 @@ type DateSteps = "days" | "months" | "years";
 
 type DatePickerProps = {
   containerClassName?: string;
+  label: string;
   name: string;
-  value: Date | null;
   onSelectDate: (date: Date | null) => void;
+  value: Date | null;
 };
 
 const getMonth = new Date().getMonth();
@@ -56,9 +57,10 @@ function isSameDay(dateA: Date | null, dateB: Date | null) {
 
 export default function DatePicker({
   containerClassNamen,
+  label,
   name,
-  value,
   onSelectDate,
+  value,
 }: DatePickerProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState("");
@@ -153,9 +155,10 @@ export default function DatePicker({
         //   labelClassName={labelClassName}
         //   leftIconClassName={leftIconClassName}
         name={name}
-        label={name}
+        label={label}
         onMouseDown={handleToggleDropDown}
         fullWidth
+        onChange={() => {}}
         //   onClickRightIcon={(e?: MouseEvent<HTMLDivElement>) =>
         //     handleClickRightIcon(e)
         //   }
@@ -208,14 +211,26 @@ export default function DatePicker({
                   ))}
                 </div>
 
-                <div className="grid grid-cols-7 gap-1 text-center">
+                <div className="grid grid-cols-7 gap-1 text-center mt-1.5">
                   {calendarAllDays.map((day, index) => {
                     if (!day)
                       return <span key={index} className="w-8 h-8"></span>;
+
+                    const isSelected = isSameDay(day, value);
+                    const isToday = isSameDay(day, new Date());
+
                     return (
                       <div
                         key={index}
-                        className="text-sm content-center w-8 h-8 rounded-full cursor-pointer"
+                        className={`text-sm content-center w-8 h-8 rounded-full cursor-pointer ${
+                          isToday && isToday !== isSelected ? "bg-gray-500" : ""
+                        } ${
+                          isSelected
+                            ? "bg-green text-light-green font-bold hover:bg-light-green hover:text-green"
+                            : ""
+                        } ${
+                          !isSelected && !isToday ? "hover:bg-gray-100" : ""
+                        }`}
                         onClick={() => handleSelectDate(day)}
                       >
                         {day.getDate()}
@@ -229,10 +244,20 @@ export default function DatePicker({
             {dateStep === "months" && (
               <div className="grid grid-cols-3 gap-4">
                 {months.map((month, index) => {
+                  const isSelectedMonth = index === monthStore;
+                  const isThisMonth = index === new Date().getMonth();
                   return (
                     <div
                       key={index}
-                      className="text-sm p-2 rounded-lg hover:bg-light-green hover:text-green cursor-pointer"
+                      className={`text-sm p-2 rounded-lg  ${
+                        !isSelectedMonth && !isThisMonth
+                          ? "hover:bg-gray-100"
+                          : ""
+                      } ${
+                        isSelectedMonth
+                          ? "bg-green text-light-green hover:bg-light-green hover:text-green font-bold"
+                          : ""
+                      } ${isThisMonth ? "bg-gray-500" : ""}  cursor-pointer`}
                       onClick={() => {
                         setMonthStore(index);
                         setDateStep("years");
@@ -248,10 +273,20 @@ export default function DatePicker({
             {dateStep === "years" && (
               <div className="grid grid-cols-3 gap-4 text-center">
                 {yearOptions.map((year, index) => {
+                  const isSelectedYear = year === yearStore;
+                  const isThisYear = year === new Date().getFullYear();
                   return (
                     <div
                       key={index}
-                      className="text-sm p-2 rounded-lg hover:bg-light-green hover:text-green cursor-pointer"
+                      className={`text-sm p-2 rounded-lg ${
+                        !isSelectedYear && !isThisYear
+                          ? "hover:bg-gray-100"
+                          : ""
+                      } ${
+                        isSelectedYear
+                          ? "bg-green text-light-green hover:bg-light-green hover:text-green font-bold"
+                          : ""
+                      } ${isThisYear ? "bg-gray-500" : ""} cursor-pointer`}
                       onClick={() => {
                         setYearStore(year);
                         setDateStep("days");
