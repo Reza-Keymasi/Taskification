@@ -24,17 +24,44 @@ type DateSteps = "days" | "months" | "years";
 type DatePickerProps = {
   containerClassName?: string;
   name: string;
+  value: Date | null;
+  onSelectDate: (date: Date | null) => void;
 };
 
 const getMonth = new Date().getMonth();
 const getYear = new Date().getFullYear();
 
+function formattedDate(date: Date | null, format: string = "yyyy/mm/dd") {
+  if (!date) return "";
+
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+
+  return format
+    .replace("dd", day)
+    .replace("mm", month)
+    .replace("yyyy", year.toString());
+}
+
+function isSameDay(dateA: Date | null, dateB: Date | null) {
+  if (!dateA || !dateB) return false;
+
+  return (
+    dateA.getDate() === dateB.getDate() &&
+    dateA.getMonth() === dateB.getMonth() &&
+    dateA.getFullYear() === dateB.getFullYear()
+  );
+}
+
 export default function DatePicker({
   containerClassNamen,
   name,
+  value,
+  onSelectDate,
 }: DatePickerProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState("");
   const [monthStore, setMonthStore] = useState(getMonth);
   const [yearStore, setYearStore] = useState(getYear);
   const [dateStep, setDateStep] = useState<DateSteps>("days");
@@ -100,6 +127,11 @@ export default function DatePicker({
     return date.toLocaleDateString("default", { month: "long" });
   }
 
+  function handleSelectDate(date: Date | null) {
+    if (!date) return "";
+    onSelectDate(date);
+  }
+
   return (
     <div className="relative w-[300px]">
       <Input
@@ -131,7 +163,7 @@ export default function DatePicker({
         //   rightIconClassName={`${rightIconClassName} peer-focus:rotate-180 transition-all duration-300`}
         //   ref={inputRef}
         //   readOnly
-        //   value={selectBoxValue}
+        value={formattedDate(value, "yyyy-mm-dd")}
       />
 
       {isDropDownOpen && (
@@ -178,11 +210,13 @@ export default function DatePicker({
 
                 <div className="grid grid-cols-7 gap-1 text-center">
                   {calendarAllDays.map((day, index) => {
-                    if (!day) return <span className="w-8 h-8"></span>;
+                    if (!day)
+                      return <span key={index} className="w-8 h-8"></span>;
                     return (
                       <div
                         key={index}
                         className="text-sm content-center w-8 h-8 rounded-full cursor-pointer"
+                        onClick={() => handleSelectDate(day)}
                       >
                         {day.getDate()}
                       </div>
