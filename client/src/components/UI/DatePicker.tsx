@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { X, ChevronLeft, ChevronRight, LucideCalendar } from "lucide-react";
 
 import Input from "./Input";
+import { useClickOutside } from "../../hooks/useClickOutside";
 
 const months = [
   "January",
@@ -76,6 +77,7 @@ export default function DatePicker({
   const [dateStep, setDateStep] = useState<DateSteps>("days");
 
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const datepickerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (isDropDownOpen) {
@@ -84,6 +86,10 @@ export default function DatePicker({
       inputRef?.current?.blur();
     }
   }, [isDropDownOpen]);
+
+  useClickOutside([datepickerRef], () => {
+    setIsDropDownOpen(false);
+  });
 
   function handleToggleDropDown(e: MouseEvent<HTMLDivElement>) {
     e.preventDefault();
@@ -162,7 +168,10 @@ export default function DatePicker({
   }
 
   return (
-    <div className={`relative w-[300px] ${containerClassName}`}>
+    <div
+      className={`relative w-[300px] ${containerClassName}`}
+      ref={datepickerRef}
+    >
       <Input
         clearable={clearable}
         clearIcon={
