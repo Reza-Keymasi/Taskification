@@ -11,6 +11,7 @@ import { combineClasses } from "../../utils/combineClasses.utils";
 type InputProps = {
   clearable?: boolean;
   clearIcon?: ReactNode;
+  clearIconClassName?: string;
   error?: string | null;
   fullWidth?: boolean;
   inputClassName?: string;
@@ -31,6 +32,7 @@ type InputProps = {
 export default function Input({
   clearable = false,
   clearIcon,
+  clearIconClassName = "",
   error,
   fullWidth = false,
   inputClassName = "",
@@ -111,6 +113,7 @@ export default function Input({
 
   const clearIconClasess = combineClasses(
     clearIconBaseClasess,
+    clearIconClassName,
     !isDisabled ? "cursor-pointer" : "cursor-not-allowed"
   );
 
