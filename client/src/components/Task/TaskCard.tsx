@@ -1,6 +1,6 @@
 import Tag from "../UI/Tag";
 
-export default function Task() {
+export default function TaskCard() {
   return (
     <article className="flex flex-col p-3 gap-3 bg-light-green rounded-lg shadow shadow-green">
       <div className="flex justify-between">
