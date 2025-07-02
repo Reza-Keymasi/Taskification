@@ -27,6 +27,7 @@ type DatePickerProps = {
   clearable?: boolean;
   containerClassName?: string;
   inputClassName?: string;
+  isDisabled?: boolean;
   label: string;
   name: string;
   onSelectDate: (date: Date | null) => void;
@@ -64,6 +65,7 @@ export default function DatePicker({
   clearable = false,
   containerClassName = "",
   inputClassName,
+  isDisabled = false,
   label,
   name,
   onSelectDate,
@@ -71,7 +73,6 @@ export default function DatePicker({
   value,
 }: DatePickerProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  const [currentDate, setCurrentDate] = useState("");
   const [monthStore, setMonthStore] = useState(getMonth);
   const [yearStore, setYearStore] = useState(getYear);
   const [dateStep, setDateStep] = useState<DateSteps>("days");
@@ -189,9 +190,7 @@ export default function DatePicker({
         }
         clearIconClassName="right-10"
         inputClassName={`${inputClassName} cursor-pointer`}
-        //   isDisabled={isDisabled}
-        //   labelClassName={labelClassName}
-        //   leftIconClassName={leftIconClassName}
+        isDisabled={isDisabled}
         fullWidth
         label={label}
         name={name}
@@ -213,7 +212,6 @@ export default function DatePicker({
           onMouseDown={(e) => e.preventDefault()}
         >
           <div className="flex flex-col gap-5 py-4 px-4 w-full">
-            {/* This is date picker header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center justify-center hover:bg-gray-400 w-7 h-7 rounded-full cursor-pointer">
                 <ChevronLeft size={18} onClick={handlePrevMonth} />
@@ -238,7 +236,6 @@ export default function DatePicker({
               </div>
             </div>
 
-            {/* This is days */}
             {dateStep === "days" && (
               <div>
                 <div className="grid grid-cols-7 gap-1 text-[13px] border-b border-gray-500">
