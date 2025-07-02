@@ -161,7 +161,9 @@ export default function DatePicker({
     onSelectDate(date);
   }
 
-  function handleClear() {
+  function handleClear(e: MouseEvent<HTMLOrSVGElement>) {
+    e.preventDefault();
+    e.stopPropagation();
     onSelectDate(null);
     setMonthStore(getMonth);
     setYearStore(getYear);
@@ -188,21 +190,20 @@ export default function DatePicker({
         clearIconClassName="right-10"
         inputClassName={`${inputClassName} cursor-pointer`}
         //   isDisabled={isDisabled}
-        // label={label}
         //   labelClassName={labelClassName}
         //   leftIconClassName={leftIconClassName}
-        name={name}
-        label={label}
-        onMouseDown={handleToggleDropDown}
         fullWidth
+        label={label}
+        name={name}
         onChange={() => {}}
         onClickRightIcon={(e?: MouseEvent<HTMLDivElement>) =>
           handleClickRightIcon(e)
         }
+        onMouseDown={handleToggleDropDown}
+        readOnly
+        ref={inputRef}
         rightIcon={<LucideCalendar />}
         rightIconClassName={`${rightIconClassName}`}
-        ref={inputRef}
-        readOnly
         value={formattedDate(value, "yyyy-mm-dd")}
       />
 
