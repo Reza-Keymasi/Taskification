@@ -3,6 +3,8 @@ import { X, ChevronLeft, ChevronRight, LucideCalendar } from "lucide-react";
 
 import Input from "./Input";
 import { useClickOutside } from "../../hooks/useClickOutside";
+import { isSameDay, formattedDate } from "../../utils/calendar.utils";
+import { useCalendarDays } from "../../hooks/useCalendarDays";
 
 const months = [
   "January",
@@ -38,29 +40,6 @@ type DatePickerProps = {
 const getMonth = new Date().getMonth();
 const getYear = new Date().getFullYear();
 
-function formattedDate(date: Date | null, format: string = "yyyy/mm/dd") {
-  if (!date) return "";
-
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear();
-
-  return format
-    .replace("dd", day)
-    .replace("mm", month)
-    .replace("yyyy", year.toString());
-}
-
-function isSameDay(dateA: Date | null, dateB: Date | null) {
-  if (!dateA || !dateB) return false;
-
-  return (
-    dateA.getDate() === dateB.getDate() &&
-    dateA.getMonth() === dateB.getMonth() &&
-    dateA.getFullYear() === dateB.getFullYear()
-  );
-}
-
 export default function DatePicker({
   clearable = false,
   containerClassName = "",
@@ -79,6 +58,8 @@ export default function DatePicker({
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const datepickerRef = useRef<HTMLDivElement | null>(null);
+
+  const calendarAllDays = useCalendarDays(yearStore, monthStore);
 
   useEffect(() => {
     if (isDropDownOpen) {
@@ -104,25 +85,6 @@ export default function DatePicker({
     setIsDropDownOpen((prev) => !prev);
   }
 
-  function calendarDays() {
-    const firstDayOfMonth = new Date(yearStore, monthStore, 1);
-    const lastDatOfMonth = new Date(yearStore, monthStore + 1, 0);
-    const firstDayOfWeek = firstDayOfMonth.getDay();
-    const daysInMonth = lastDatOfMonth.getDate();
-
-    const days: (Date | null)[] = [];
-
-    for (let i = 0; i < firstDayOfWeek; i++) {
-      days.push(null);
-    }
-
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(new Date(yearStore, monthStore, day));
-    }
-
-    return days;
-  }
-
   function handlePrevMonth() {
     if (monthStore === 0) {
       setMonthStore(11);
@@ -140,8 +102,6 @@ export default function DatePicker({
       setMonthStore(monthStore + 1);
     }
   }
-
-  const calendarAllDays = calendarDays();
 
   function toggleDateStep(step: DateSteps) {
     setDateStep(step);
@@ -189,12 +149,12 @@ export default function DatePicker({
           )
         }
         clearIconClassName="right-10"
+        fullWidth
         inputClassName={`${inputClassName} cursor-pointer`}
         isDisabled={isDisabled}
-        fullWidth
         label={label}
         name={name}
-        onChange={() => {}}
+        onChange={() => void 0}
         onClickRightIcon={(e?: MouseEvent<HTMLDivElement>) =>
           handleClickRightIcon(e)
         }
