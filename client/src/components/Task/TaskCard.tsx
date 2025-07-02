@@ -2,7 +2,7 @@ import Tag from "../UI/Tag";
 
 export default function Task() {
   return (
-    <article className="flex flex-col p-3 gap-3 border border-sky-500 rounded-lg">
+    <article className="flex flex-col p-3 gap-3 bg-light-green rounded-lg shadow shadow-green">
       <div className="flex justify-between">
         <p className="font-semibold text-xl">Title</p>
         <div className="flex gap-4">

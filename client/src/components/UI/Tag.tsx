@@ -6,7 +6,7 @@ type TagProps = {
 };
 
 const tagVariants: Record<TagVariants, string> = {
-  outline: "bg-transparent border border-gray-300 text-gray-600",
+  outline: "bg-transparent border border-dark-green text-dark-green",
   red: "bg-rose-600 text-white",
   green: "bg-lime-500 text-white",
   blue: "bg-sky-300 text-white",
