@@ -202,7 +202,7 @@ export default function DatePicker({
         onMouseDown={handleToggleDropDown}
         readOnly
         ref={inputRef}
-        rightIcon={<LucideCalendar />}
+        rightIcon={<LucideCalendar strokeWidth={1} />}
         rightIconClassName={`${rightIconClassName}`}
         value={formattedDate(value, "yyyy-mm-dd")}
       />
