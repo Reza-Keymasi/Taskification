@@ -1,21 +1,33 @@
 import Tag from "../UI/Tag";
 
-export default function TaskCard() {
+type TaskCardProps = {
+  description?: string;
+  dueDate: string;
+  isInProgress: boolean;
+  priority: "low" | "normal" | "high";
+  status: "todo" | "inProgress" | "completed";
+  title: string;
+};
+
+export default function TaskCard({
+  description,
+  dueDate,
+  isInProgress,
+  priority,
+  status,
+  title,
+}: TaskCardProps) {
   return (
     <article className="flex flex-col p-3 gap-3 bg-light-green rounded-lg shadow shadow-green">
       <div className="flex justify-between">
-        <p className="font-semibold text-xl">Title</p>
+        <p className="font-semibold text-xl">{title}</p>
         <div className="flex gap-4">
-          <Tag variant="outline" label="Due Date" />
-          <Tag variant="red" label="high" />
+          <Tag variant="outline" label={dueDate} />
+          <Tag variant="red" label={priority} />
         </div>
       </div>
 
-      <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem cum ut
-        ducimus obcaecati in similique. Harum nulla impedit est, esse, ratione
-        doloribus, repellat molestiae culpa ut dicta ullam? Ipsam, ut!
-      </p>
+      <p>{description}</p>
 
       <div className="flex justify-between">
         <p>Progress Switch</p>
