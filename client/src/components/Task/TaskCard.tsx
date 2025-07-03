@@ -1,22 +1,13 @@
 import Tag from "../UI/Tag";
-
-type TaskCardProps = {
-  description?: string;
-  dueDate: string;
-  isInProgress: boolean;
-  priority: "low" | "normal" | "high";
-  status: "todo" | "inProgress" | "completed";
-  title: string;
-};
+import type { ITask } from "../../types/task.interface";
 
 export default function TaskCard({
   description,
   dueDate,
-  isInProgress,
   priority,
   status,
   title,
-}: TaskCardProps) {
+}: ITask) {
   return (
     <article className="flex flex-col p-3 gap-3 bg-light-green rounded-lg shadow shadow-green">
       <div className="flex justify-between">
